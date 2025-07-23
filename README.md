@@ -1,4 +1,4 @@
-# GenREADME: Automated README Generation via GitLab Webhooks
+# GenREADME: Automated README Generation 
 
 ## Overview
 
