@@ -1,139 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.genreadme</groupId>
-	<artifactId>genreadme-mvp</artifactId>
+	<artifactId>genreadme-parent-mvp</artifactId>
 	<version>1.0.0</version>
+	<packaging>pom</packaging>
 	<name>genREADME</name>
-	<description>AI-powered service that creates contextual README files by analyzing project structure and code</description>
+	<description>AI-powered service that creates contextual README files</description>
+
+	<!-- ✅ List of submodules -->
+	<modules>
+		<module>services/repository-scanner</module>
+       <module>shared/common</module>
+	</modules>
+
+	<!-- ✅ Common properties for all modules -->
 	<properties>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<java.version>17</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<functions.framework.version>1.1.0</functions.framework.version>
-		<functions.target>io.genreadme.GenReadmeFunction</functions.target>
 	</properties>
 
-	<dependencies>
-		<!-- Google Cloud Functions Framework -->
-		<dependency>
-			<groupId>com.google.cloud.functions</groupId>
-			<artifactId>functions-framework-api</artifactId>
-			<version>${functions.framework.version}</version>
-		</dependency>
-		<!-- Cloud Functions -->
-		<dependency>
-			<groupId>com.google.cloud.functions</groupId>
-			<artifactId>functions-framework-api</artifactId>
-			<version>1.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.17.1</version>
-		</dependency>
-		<!-- Vertex AI -->
-		<dependency>
-			<groupId>com.google.cloud</groupId>
-			<artifactId>google-cloud-vertexai</artifactId>
-			<version>0.4.0</version>
-		</dependency>
+	<!-- ✅ Centralized dependency versions -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- Logging and Utilities -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.18.30</version>
+				<scope>provided</scope>
+			</dependency>
 
-		<!-- JSON & Utils -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
-		</dependency>
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>2.10.1</version>
+			</dependency>
 
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>2.17.1</version>
+			</dependency>
 
-		<!-- Lombok (optional) -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
-			<scope>provided</scope>
-		</dependency>
+			<!-- Google Cloud (optional) -->
+			<dependency>
+				<groupId>com.google.cloud</groupId>
+				<artifactId>google-cloud-vertexai</artifactId>
+				<version>0.4.0</version>
+			</dependency>
 
+			<!-- Testing -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13.2</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>4.11.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>3.2.0</version> <!-- Or your actual Spring Boot version -->
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.cloud</groupId>
+				<artifactId>google-cloud-aiplatform</artifactId>
+				<version>3.65.0</version>
+			</dependency>
 
-		<!-- Gson for JSON handling -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
-		</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-		<!-- JUnit for testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Mockito for mocking in tests -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>4.11.0</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
+	<!-- ✅ Centralized plugin versions -->
 	<build>
-		<plugins>
-			<!-- Maven Compiler Plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
-				<configuration>
-					<source>17</source>
-					<target>17</target>
-				</configuration>
-			</plugin>
+		<pluginManagement>
+			<plugins>
+				<!-- Compiler -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.11.0</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+					</configuration>
+				</plugin>
 
-			<!-- Functions Framework Plugin for local development -->
-			<plugin>
-				<groupId>com.google.cloud.functions</groupId>
-				<artifactId>function-maven-plugin</artifactId>
-				<version>0.10.1</version>
-				<configuration>
-					<functionTarget>${functions.target}</functionTarget>
-					<port>8080</port>
-				</configuration>
-			</plugin>
+				<!-- Surefire (unit tests) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
 
-			<!-- Surefire Plugin for running tests -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0</version>
-			</plugin>
+				<!-- Shade plugin (for fat JARs, e.g. ai-server) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.4.1</version>
+				</plugin>
 
-			<!-- Shade Plugin for creating fat JAR -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.4.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>${functions.target}</mainClass>
-								</transformer>
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+				<!-- Functions Framework plugin (if needed for cloud deployment) -->
+				<plugin>
+					<groupId>com.google.cloud.functions</groupId>
+					<artifactId>function-maven-plugin</artifactId>
+					<version>0.10.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>
